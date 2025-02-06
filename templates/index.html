@@ -104,6 +104,10 @@
                 <input type="text" id="name" placeholder="Enter your name" required>
             </div>
             <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" placeholder="Enter your age" min="1" required>
+            </div>
+            <div class="form-group">
                 <label for="mobile">Mobile</label>
                 <input type="tel" id="mobile" placeholder="Enter your mobile number" pattern="[0-9]{10}" required>
             </div>
@@ -127,6 +131,7 @@
         <div class="result-section" id="resultSection">
             <h2>Detection Result</h2>
             <p><strong>Name:</strong> <span id="resultName"></span></p>
+            <p><strong>Age:</strong> <span id="resultAge"></span></p>
             <p><strong>Mobile:</strong> <span id="resultMobile"></span></p>
             <p><strong>Gender:</strong> <span id="resultGender"></span></p>
             <p><strong>Blood Group:</strong> <span id="resultBloodGroup"></span></p>
@@ -151,6 +156,7 @@
 
         function submitDetails() {
             document.getElementById('resultName').textContent = document.getElementById('name').value;
+            document.getElementById('resultAge').textContent = document.getElementById('age').value;
             document.getElementById('resultMobile').textContent = document.getElementById('mobile').value;
             document.getElementById('resultGender').textContent = document.getElementById('gender').value;
             document.getElementById('resultBloodGroup').textContent = "A+"; // Mock Data
@@ -160,3 +166,4 @@
     </script>
 </body>
 </html>
+
