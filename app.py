@@ -16,7 +16,7 @@ app = Flask(__name__)
 model = tf.keras.models.load_model('./model/model.h5')
 
 # Define the allowed extensions for uploaded files
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg','bmp'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp'}
 
 # Function to check allowed file extensions
 def allowed_file(filename):
@@ -38,7 +38,6 @@ def preprocess_image(file_path):
     img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
     return img_array
 
-
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -57,9 +56,14 @@ def predict():
     if not allowed_file(file.filename):
         return jsonify({'error': 'Invalid file type. Allowed types are png, jpg, jpeg'}), 400
 
+    # Ensure 'uploads' directory exists
+    upload_folder = 'uploads'
+    if not os.path.exists(upload_folder):
+        os.makedirs(upload_folder)
+
     # Save the uploaded file
     filename = secure_filename(file.filename)
-    file_path = os.path.join('uploads', filename)
+    file_path = os.path.join(upload_folder, filename)
     file.save(file_path)
 
     try:
@@ -68,11 +72,11 @@ def predict():
 
         # Perform prediction
         predictions = model.predict(img)
-        predicted_class = int(np.argmax(predictions[0])) 
-        print('predicted_class is : ', predicted_class)
+        predicted_class = int(np.argmax(predictions[0]))
+        print('Predicted class:', predicted_class)
 
-        # Optional: Define class names (if not in the model)
-        class_names = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']  # Example classes
+        # Define class names
+        class_names = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
         predicted_label = class_names[predicted_class]
 
         # Return the result as JSON
@@ -91,6 +95,6 @@ def predict():
             os.remove(file_path)
 
 if __name__ == '__main__':
-    if not os.path.exists('uploads'):
-        os.makedirs('uploads')
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Use PORT from environment, default to 5000
+    app.run(host="0.0.0.0", port=port, debug=True)
+
